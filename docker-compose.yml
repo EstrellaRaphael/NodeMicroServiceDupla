@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  product-service:
+    build: ./apps/product-service
+    ports:
+      - "3001:3001"
+
+  order-service:
+    build: ./apps/order-service
+    ports:
+      - "3002:3002"
+    environment:
+      - PRODUCT_SERVICE_URL=http://product-service:3001
+    depends_on:
+      - product-service
+
+  api-gateway:
+    build: ./apps/api-gateway
+    ports:
+      - "3000:3000"
+    environment:
+      - PRODUCT_SERVICE=http://product-service:3001
+      - ORDER_SERVICE=http://order-service:3002
+    depends_on:
+      - product-service
+      - order-service
