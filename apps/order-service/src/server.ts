@@ -1,9 +1,10 @@
+import 'dotenv/config';
 import Fastify from 'fastify';
 
 const app = Fastify({ logger: true });
 
 const PRODUCT_SERVICE_URL =
-    process.env.PRODUCT_SERVICE_URL || 'http://localhost:3001';
+    process.env.PRODUCT_SERVICE_URL;
 
 interface Product {
     id: number;
@@ -34,7 +35,7 @@ app.post<{ Body: { productId: number; quantity: number } }>(
         const response = await fetch(`${PRODUCT_SERVICE_URL}/products/${productId}`);
 
         if (!response.ok) {
-            return reply.status(404).send({ error: 'Produto não encontrado no Product Service' });
+            return reply.status(404).send({ error: 'Produto não encontrado' });
         }
 
         const product = await response.json() as Product;
